@@ -1,0 +1,43 @@
+@startuml
+AccessModifiers <|-- WithRegistry
+
+AccessModifiers : modifier onlyInstanceOperator()
+AccessModifiers : modifier onlyPolicyFlow()
+AccessModifiers : modifier onlyOracleService()
+AccessModifiers : modifier onlyOracleOwner()
+AccessModifiers : modifier onlyProductOwner()
+
+WithRegistry : assignRegistry()
+
+Delegator <|-- BaseModuleStorage
+
+BaseModuleStorage : fallback()
+BaseModuleStorage : _assignController()
+
+Delegator : _delegate()
+
+BaseModuleStorage <|-- ModuleStorage
+WithRegistry <|-- ModuleStorage 
+
+ModuleStorage : fallback()
+ModuleStorage : assignController()
+
+BaseModuleController <|-- ModuleController 
+WithRegistry <|-- ModuleController 
+
+BaseModuleController : _assignStorage()
+
+ModuleController : fallback() = revert
+ModuleController : assignStorage()
+
+PolicyStorageModel <|-- Policy
+ModuleStorage <|-- Policy
+
+IPolicy <|-- PolicyStorageModel 
+
+IPolicy : events, enums, structs
+
+IPolicyController <|-- PolicyController
+PolicyStorageModel <|-- PolicyController
+ModuleController <|-- PolicyController
+@enduml
