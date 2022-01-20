@@ -1,0 +1,80 @@
+@startuml
+Product <|-- FlightDelayChainlink 
+FlightDelayChainlink *- Risk
+
+Risk : bytes32 carrierFlightNumber
+Risk : bytes32 departureYearMonthDay
+Risk : uint256 departureTime
+
+FlightDelayChainlink : POLICY_FLOW "PolicyFlowDefault"
+FlightDelayChainlink : Risk[] risks
+
+FlightDelayChainlink : setOracles()
+FlightDelayChainlink : uniqueId()
+FlightDelayChainlink : applyForPolicy()
+
+FlightDelayChainlink : flightRatingsCallback()
+FlightDelayChainlink : calculatePayouts()
+FlightDelayChainlink : declineAndPayback()
+
+FlightDelayChainlink : flightStatusCallback()
+FlightDelayChainlink : resolvePayout()
+
+Product *- IProductService
+Product : IProductService productService
+
+IProductService . ProductService
+
+WithRegistry <|-- ProductService
+Delegator <|-- ProductService
+
+ProductService : proposeProduct()
+ProductService : fallback()
+
+WithRegistry : IRegistryController registry
+WithRegistry : assignRegistry()
+WithRegistry : getContractFromRegistry()
+
+WithRegistry *- IRegistryController
+
+IRegistryController : register()
+IRegistryController : getContract()
+
+Delegator : _delegate()
+
+ProductService . PolicyFlowDefault 
+WithRegistry <|-- PolicyFlowDefault 
+
+PolicyFlowDefault : proposeProduct()
+PolicyFlowDefault : newApplication()
+PolicyFlowDefault : underwrite()
+PolicyFlowDefault : decline()
+PolicyFlowDefault : newClaim()
+PolicyFlowDefault : confirmClaim()
+PolicyFlowDefault : expire()
+PolicyFlowDefault : payout()
+PolicyFlowDefault : request()
+PolicyFlowDefault : getLicenseContract()
+PolicyFlowDefault : getPolicyContract()
+PolicyFlowDefault : getQueryContract()
+
+Product : _proposeProduct()
+Product : _newApplication()
+Product : _underwrite()
+Product : _decline()
+Product : _newClaim()
+Product : _confirmClaim()
+Product : _expire()
+Product : _payout()
+Product : _request()
+
+IProductService : proposeProduct()
+IProductService : newApplication()
+IProductService : underwrite()
+IProductService : decline()
+IProductService : newClaim()
+IProductService : confirmClaim()
+IProductService : expire()
+IProductService : payout()
+IProductService : request()
+@enduml
