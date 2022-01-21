@@ -1,0 +1,10 @@
+@startuml
+deployer -> deployer :  gif.Instance(httpProvider, gifRegistry)\ngifInstance.getProductServiceAddress()
+deployer -> FlightDelayChainlink  : deploy(FlightDelayChainlink,\n  productServiceAddress)
+
+FlightDelayChainlink -> Product : Product(_productServiceAddress,\n  "FlightDelayChainlink", "PolicyFlowDefault")
+
+Product -> ProductService : proposeProduct("FlightDelayChainlink",\n  "PolicyFlowDefault")
+
+ProductService -> Licence : proposeProduct("FlightDelayChainlink",\n  msg.sender, "PolicyFlowDefault")
+@enduml
