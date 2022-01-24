@@ -1,0 +1,63 @@
+@startuml
+ILicenseController <|-- LicenseController
+LicenseStorageModel <|-- LicenseController
+ModuleController <|-- LicenseController
+
+ILicenseController : proposeProduct(_name, _productContract, _policyFlow) -> _id
+ILicenseController : approveProduct(_id)
+ILicenseController : pauseProduct(_id)
+ILicenseController : disapproveProduct(_id)
+
+ILicenseController : isValidCall(_id) -> _valid
+ILicenseController : authorize(_sender) -> _authorized, _policyFlow
+
+WithRegistry <|-- ModuleController 
+BaseModuleController <|-- ModuleController 
+
+ModuleController : fallback() DISABLED!
+ModuleController : assignStorage(_storage)
+
+AccessModifiers <|-- WithRegistry 
+
+AccessModifiers : onlyInstanceOperator()
+AccessModifiers : onlyPolicyFlow()
+AccessModifiers : onlyOracleService()
+AccessModifiers : onlyOracleOwner()
+AccessModifiers : onlyProductOwner()
+
+WithRegistry : constructor(_registry)
+WithRegistry : getContractFromRegistry(_contractName) -> _addr
+
+BaseModuleController : address delegator
+BaseModuleController : _assignStorage(_storage)
+
+LicenseController : constant NAME "LicenseController"
+
+ILicence <|-- LicenseStorageModel 
+
+LicenseStorageModel : mapping[_id, Product] products
+LicenseStorageModel : mapping[address, _id] productIdByAddress
+LicenseStorageModel : uint256 productCount
+
+ILicence : enum ProductState {Proposed, Approved, Paused}
+ILicence : struct Product {name, productContract, policyFlow, release, state}
+
+LicenseStorageModel <|-- License
+ModuleStorage <|-- License
+
+ModuleStorage : fallback() {_delegate(controller) }
+ModuleStorage : assignController()
+
+BaseModuleStorage <|-- ModuleStorage 
+WithRegistry <|-- ModuleStorage 
+
+Delegator <|-- BaseModuleStorage 
+
+BaseModuleStorage : address controller
+BaseModuleStorage : _assignController()
+BaseModuleStorage : fallback()
+
+Delegator : _delegate(_implementation) { assembly }
+
+License : constant NAME "License"
+@enduml
