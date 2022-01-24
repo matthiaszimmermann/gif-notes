@@ -1,1 +1,1 @@
-# gif-notes-private
+# gif uml diagrams (sketch)
